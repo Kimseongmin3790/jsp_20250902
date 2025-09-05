@@ -28,6 +28,10 @@
 		color: blue;
 		font-weight: bold;
 	}
+	a {
+		color: black;
+		text-decoration: none;
+	}
 </style>
 </head>
 <body>
@@ -37,7 +41,8 @@
 		// emp 테이블 조회하는데 사원들의 급여등급 + 부서이름을 포함해서 조회
 		String query = "SELECT EMPNO, ENAME, JOB, SAL, DNAME, GRADE FROM EMP E "
 						+ "INNER JOIN SALGRADE S ON E.SAL BETWEEN S.LOSAL AND S.HISAL "
-						+ "INNER JOIN DEPT D ON E.DEPTNO = D.DEPTNO";
+						+ "INNER JOIN DEPT D ON E.DEPTNO = D.DEPTNO "
+						+ "ORDER BY GRADE DESC";
 		ResultSet rs = stmt.executeQuery(query);
 	%>
 	<table>

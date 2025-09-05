@@ -29,7 +29,7 @@
 	
 	try{
 		ResultSet rs = stmt.executeQuery(query);
-		rs.next();
+		if(rs.next()) {
 	%>
 		<div>
 			<form name="form" action="">
@@ -62,6 +62,10 @@
 			</form>
 		</div>
 	<%
+		  } else {
+			  out.println("데이터 조회에 실패했습니다");
+		  }
+		
 	} catch (SQLException e) {
 		out.println("오류가 발생했습니다!");
 	}
