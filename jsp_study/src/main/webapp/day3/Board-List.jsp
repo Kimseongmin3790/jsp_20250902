@@ -1,3 +1,4 @@
+<%@page import="java.lang.annotation.Documented"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -54,12 +55,15 @@
 <body>
 <%@ include file="../db/db.jsp" %>
 	<div id="container">
+		<%
+			String keyword = request.getParameter("keyword");
+		%>
 		<div id="search">
-			검색어 : <input type="text" id="keyword">
+			검색어 : <input type="text" id="keyword" value="<%= keyword != null ? keyword : "" %>">
 			<button onclick="fnSearch()">검색</button>
 		</div>
-		<div id="search" onchange="fnNumber(this.value)">
-			<select id="number">
+		<div id="search">
+			<select id="number" onchange="fnNumber(this.value)">
 				<%
 					int arr[] = {3,5,7,10,15,20};
 					for (int i=0; i<arr.length; i++) {
@@ -98,8 +102,7 @@
 		
 		<%
 			ResultSet rs = null;
-			String keyword = request.getParameter("keyword");
-
+			
 			String keywordQuery = "";
 			if(keyword != null) {
 				keywordQuery = "WHERE TITLE LIKE '%" + keyword + "%' ";
@@ -131,7 +134,7 @@
 			
 			
 			
-			String cntQuery = "SELECT COUNT(*) TOTAL FROM TBL_BOARD";
+			String cntQuery = "SELECT COUNT(*) TOTAL FROM TBL_BOARD " + keywordQuery;
 			ResultSet rsCnt = stmt.executeQuery(cntQuery);
 			rsCnt.next();
 			
@@ -165,9 +168,9 @@
 			<%
 				for(int i=1; i<=pageList; i++) {
 					if(i == currentPage) {
-						out.println("<a href='?page=" + i + "&size=" + pageSize + "' class='active'>" + i + "</a>");
+						out.println("<a href='?page=" + i + "&size=" + pageSize + "&keyword=" + keyword  + "' class='active'>" + i + "</a>");
 					} else {
-						out.println("<a href='?page=" + i + "&size=" + pageSize + "'>" + i + "</a>");	
+						out.println("<a href='?page=" + i + "&size=" + pageSize + "&keyword=" + keyword  + "'>" + i + "</a>");	
 					}
 				}
 			%>
@@ -179,16 +182,25 @@
 			</a>
 		</div>
 	</div>
+	<input id="pageSize" value="<%= pageSize %>" hidden>
 </body>
 </html>
 <script>
+	let size = document.querySelector("#pageSize").value;
+	let selectList = document.querySelector("#number");
+	for (let i=0; i<selectList.length; i++) {
+		if(selectList[i].value == size) {
+			selectList[i].selected = true;
+		}
+	}
+
 	function fnBoard(boardNo) {
 		location.href = "Board-View.jsp?boardNo=" + boardNo;
 	}
 	
 	function fnSearch() {
 		let keyword = document.querySelector("#keyword").value;
-		location.href = "Board-List.jsp?keyword=" + keyword;
+		location.href = "Board-List.jsp?keyword=" + keyword + "&size=" + size;
 	}
 	
 	function fnList(column, orderKind) {

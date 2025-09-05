@@ -46,9 +46,9 @@
 	
 	function fnReturn(flg){
 		if(flg == "N"){
-				let form = document.stu;
-				form.stuNo.disabled = true;
-				joinFlg = true;
+			let form = document.stu;
+			form.stuNo.disabled = true;
+			joinFlg = true;
 		}
 	}
 </script>
